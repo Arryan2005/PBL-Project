@@ -31,11 +31,13 @@ A Django-based college project for smart patient triage, emergency queue managem
    pip install -r requirements.txt
 
 2. Run Migrations:
+    ```bash
     py manage.py makemigrations
     py manage.py migrate
 
-3. Start server:
+4. Start server:
+   ```bash
     py manage.py runserver
 
-4. Open in browser:
+6. Open in browser:
     http://127.0.0.1:8000/
