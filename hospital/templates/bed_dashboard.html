@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %}Bed Dashboard{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Bed Management Dashboard</h1>
+    <p>Track total, available, and occupied beds in real time.</p>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card">
+        <h3>Total Beds</h3>
+        <p>{{ total_beds }}</p>
+    </div>
+
+    <div class="stat-card available">
+        <h3>Available Beds</h3>
+        <p>{{ available_beds }}</p>
+    </div>
+
+    <div class="stat-card occupied">
+        <h3>Occupied Beds</h3>
+        <p>{{ occupied_beds }}</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Bed Number</th>
+                    <th>Bed Type</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for bed in beds %}
+                <tr>
+                    <td>{{ bed.bed_number }}</td>
+                    <td>{{ bed.bed_type }}</td>
+                    <td>
+                        {% if bed.is_available %}
+                            <span class="badge badge-success">Available</span>
+                        {% else %}
+                            <span class="badge badge-danger">Occupied</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="empty-state">No beds added yet. Add beds from Admin panel.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Add Patient{% endblock %}
+
+{% block content %}
+<div class="hero-card">
+    <div class="hero-content">
+        <h1>Smart Patient Registration</h1>
+        <p>
+            Register patients, capture symptoms, identify emergencies, and let the system prioritize
+            treatment intelligently for faster hospital response.
+        </p>
+    </div>
+<div class="hero-badges">
+<div class="hero-pill">AI Priority</div>
+<div class="hero-pill">Smart Beds</div>
+<div class="hero-pill">Department Suggestion</div>
+  </div>
+</div>
+
+<div class="page-header">
+    <h1>Patient Registration Form</h1>
+    <p>Enter patient details and symptoms to generate queue priority automatically.</p>
+</div>
+
+<div class="card form-card">
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="form-grid">
+            <div class="form-group">
+                <label for="{{ form.name.id_for_label }}">Patient Name</label>
+                {{ form.name }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.age.id_for_label }}">Age</label>
+                {{ form.age }}
+            </div>
+
+            <div class="form-group">
+                <label for="{{ form.gender.id_for_label }}">Gender</label>
+                {{ form.gender }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label>Select Symptoms / Problems</label>
+            <div class="checkbox-grid">
+                {{ form.problems }}
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.other_problem.id_for_label }}">Other Problem / Additional Notes</label>
+            {{ form.other_problem }}
+        </div>
+
+        <div class="form-group checkbox-inline">
+            {{ form.is_emergency }}
+            <label for="{{ form.is_emergency.id_for_label }}">Mark as Emergency Case</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Register Patient</button>
+    </form>
+</div>
+{% endblock %}

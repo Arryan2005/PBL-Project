@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+
+{% block title %}Queue History{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Completed Patient History</h1>
+    <p>Review completed patient records, final severity, and department recommendations.</p>
+</div>
+
+<div class="card">
+    <div class="table-toolbar">
+        <div class="toolbar-title">
+            <h3>Patient Treatment History</h3>
+            <p>Completed patient queue records for reporting and review.</p>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Name</th>
+                    <th>Problems</th>
+                    <th>Priority</th>
+                    <th>Severity</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in history %}
+                <tr>
+                    <td><strong>T{{ entry.token_number }}</strong></td>
+                    <td>{{ entry.patient.name }}</td>
+                    <td>{{ entry.patient.problem }}</td>
+                    <td>{{ entry.patient.priority_score }}</td>
+                    <td>
+                        {% if entry.patient.severity == "Critical" %}
+                            <span class="badge badge-critical">Critical</span>
+                        {% elif entry.patient.severity == "High" %}
+                            <span class="badge badge-high">High</span>
+                        {% elif entry.patient.severity == "Medium" %}
+                            <span class="badge badge-medium">Medium</span>
+                        {% else %}
+                            <span class="badge badge-low">Low</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ entry.patient.recommended_department }}</td>
+                    <td><span class="badge badge-success">Completed</span></td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7" class="empty-state">No completed patient history yet.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

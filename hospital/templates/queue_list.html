@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+
+{% block title %}Active Queue{% endblock %}
+
+{% block content %}
+<div class="hero-card">
+    <div class="hero-content">
+        <h1>Live Emergency Queue Dashboard</h1>
+        <p>
+            Monitor active patients, assign beds intelligently, and complete treatment workflows using
+            smart severity-based prioritization and bed allocation.
+        </p>
+    </div>
+    <div class="hero-badges">
+        <div class="hero-pill">Critical First</div>
+        <div class="hero-pill">Smart Beds</div>
+        <div class="hero-pill">Department AI</div>
+    </div>
+</div>
+
+<div class="page-header">
+    <h1>Active Hospital Queue</h1>
+    <p>Patients are sorted automatically by smart priority score and severity level.</p>
+</div>
+
+<div class="quick-stats">
+    <div class="quick-card">
+        <h4>Total Active Patients</h4>
+        <p>{{ queue|length }}</p>
+    </div>
+    <div class="quick-card">
+        <h4>Queue Mode</h4>
+        <p>Smart</p>
+    </div>
+    <div class="quick-card">
+        <h4>Allocation</h4>
+        <p>Severity-Based</p>
+    </div>
+</div>
+
+<div class="card">
+    <div class="table-toolbar">
+        <div class="toolbar-title">
+            <h3>Patient Queue Management</h3>
+            <p>Smart queue, smart bed allocation, and department recommendation.</p>
+        </div>
+    </div>
+
+    <div class="table-responsive">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th>Token</th>
+                    <th>Name</th>
+                    <th>Problems</th>
+                    <th>Emergency</th>
+                    <th>Priority</th>
+                    <th>Severity</th>
+                    <th>Department</th>
+                    <th>Status</th>
+                    <th>Bed</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entry in queue %}
+                <tr>
+                    <td><strong>T{{ entry.token_number }}</strong></td>
+                    <td>{{ entry.patient.name }}</td>
+                    <td>{{ entry.patient.problem }}</td>
+                    <td>
+                        {% if entry.patient.is_emergency %}
+                            <span class="badge badge-danger">Emergency</span>
+                        {% else %}
+                            <span class="badge badge-success">Normal</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ entry.patient.priority_score }}</td>
+                    <td>
+                        {% if entry.patient.severity == "Critical" %}
+                            <span class="badge badge-critical">Critical</span>
+                        {% elif entry.patient.severity == "High" %}
+                            <span class="badge badge-high">High</span>
+                        {% elif entry.patient.severity == "Medium" %}
+                            <span class="badge badge-medium">Medium</span>
+                        {% else %}
+                            <span class="badge badge-low">Low</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ entry.patient.recommended_department }}</td>
+                    <td>{{ entry.status }}</td>
+                    <td>
+                        {% if entry.assigned_bed %}
+                            <strong>{{ entry.assigned_bed.bed_number }}</strong>
+                            <br>
+                            <small>{{ entry.assigned_bed.bed_type }}</small>
+                        {% else %}
+                            <span class="text-muted">Not Assigned</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="action-buttons">
+                            {% if not entry.assigned_bed and entry.status != "Completed" %}
+                                <a href="/assign-bed/{{ entry.id }}/" class="btn btn-sm btn-info">Assign Bed</a>
+                            {% endif %}
+
+                            {% if entry.status != "Completed" %}
+                                <a href="/complete-patient/{{ entry.id }}/"
+                                   class="btn btn-sm btn-success"
+                                   onclick="return confirm('Mark this patient as completed?');">
+                                    Complete
+                                </a>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" class="empty-state">No active patients in queue.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
