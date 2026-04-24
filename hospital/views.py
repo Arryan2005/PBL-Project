@@ -1,81 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import PatientForm
 from .models import Patient, QueueEntry, Bed
+from .ai_service import get_ai_analysis_safe
 
 
 # -----------------------------
-# SMART LOGIC FUNCTIONS
+# SMART LOGIC FUNCTIONS (kept as fallback inside ai_service.py)
 # -----------------------------
-
-def calculate_priority(patient, selected_problems):
-    score = 0
-
-    # Emergency gets strong boost
-    if patient.is_emergency:
-        score += 50
-
-    # Age-based risk
-    if patient.age > 60:
-        score += 10
-    elif patient.age < 5:
-        score += 10
-
-    # Symptom-based weighted scoring
-    symptom_scores = {
-        'Chest Pain': 20,
-        'Breathing Problem': 25,
-        'Fever': 5,
-        'Headache': 5,
-        'Accident': 30,
-        'Bleeding': 20,
-        'Unconscious': 40,
-        'Weakness': 8,
-    }
-
-    for symptom in selected_problems:
-        score += symptom_scores.get(symptom, 0)
-
-    # Bonus for multiple severe symptoms
-    severe_symptoms = {'Chest Pain', 'Breathing Problem', 'Accident', 'Bleeding', 'Unconscious'}
-    severe_count = len([s for s in selected_problems if s in severe_symptoms])
-
-    if severe_count >= 2:
-        score += 15
-
-    # Bonus if user typed extra problem text
-    if patient.other_problem:
-        score += 5
-
-    return score
-
-
-def get_severity(score):
-    if score >= 90:
-        return "Critical"
-    elif score >= 65:
-        return "High"
-    elif score >= 35:
-        return "Medium"
-    else:
-        return "Low"
-
-
-def get_recommended_department(selected_problems):
-    if 'Accident' in selected_problems or 'Bleeding' in selected_problems:
-        return "Trauma / Emergency"
-    elif 'Unconscious' in selected_problems:
-        return "Emergency / ICU"
-    elif 'Chest Pain' in selected_problems:
-        return "Cardiology"
-    elif 'Breathing Problem' in selected_problems:
-        return "Pulmonology / Emergency"
-    elif 'Fever' in selected_problems or 'Weakness' in selected_problems:
-        return "General Medicine"
-    elif 'Headache' in selected_problems:
-        return "Neurology / General Medicine"
-    else:
-        return "General Medicine"
-
 
 def get_best_bed_for_severity(severity):
     """
@@ -134,10 +65,18 @@ def add_patient(request):
             patient.problem = all_problems
             patient.other_problem = other_problem
 
-            # Smart logic
-            patient.priority_score = calculate_priority(patient, selected_problems)
-            patient.severity = get_severity(patient.priority_score)
-            patient.recommended_department = get_recommended_department(selected_problems)
+            # 🤖 Gemini AI logic
+            ai_result = get_ai_analysis_safe(
+                name=patient.name,
+                age=patient.age,
+                gender=patient.gender,
+                problems=list(selected_problems),
+                other_problem=other_problem,
+                is_emergency=patient.is_emergency
+            )
+            patient.priority_score = ai_result['priority_score']
+            patient.severity       = ai_result['severity']
+            patient.recommended_department = ai_result['recommended_department']
 
             patient.save()
 
