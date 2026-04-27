@@ -1,4 +1,4 @@
-# 🏥 Smart Hospital Queue & Emergency Bed Allocation System
+# Smart Hospital Queue & Emergency Bed Allocation System
 
 A **Django-based smart hospital mini project** that helps hospitals **prioritize patients intelligently**, **manage emergency queues**, and **allocate beds based on patient severity**.
 
@@ -6,7 +6,7 @@ This project was built as a **PBL (Project-Based Learning) college project** to 
 
 ---
 
-## 🚀 Live Project Idea
+## Live Project Idea
 
 This system improves hospital workflow by:
 
@@ -20,9 +20,9 @@ This system improves hospital workflow by:
 
 ---
 
-## ✨ Features
+## Features
 
-* ✅ Patient registration with:
+*  Patient registration with:
 
   * Name
   * Age
@@ -31,35 +31,35 @@ This system improves hospital workflow by:
   * Additional notes/problem
   * Emergency case flag
 
-* ✅ AI-assisted smart triage using:
+*  AI-assisted smart triage using:
 
   * **Google Gemini API**
   * **Fallback rule-based logic** if AI fails
 
-* ✅ Automatic generation of:
+*  Automatic generation of:
 
   * **Priority Score**
   * **Severity Level** (`Critical`, `High`, `Medium`, `Low`)
   * **Recommended Department**
 
-* ✅ Smart queue management:
+*  Smart queue management:
 
   * Patients are sorted by **highest priority first**
   * More critical patients are handled before low-risk patients
 
-* ✅ Smart bed allocation:
+*  Smart bed allocation:
 
   * **Critical** → ICU preferred
   * **High** → Emergency bed preferred
   * **Medium / Low** → General bed preferred
 
-* ✅ Dashboard pages for:
+*  Dashboard pages for:
 
   * Active patient queue
   * Completed patient history
   * Bed availability tracking
 
-* ✅ Django Admin support for:
+*  Django Admin support for:
 
   * Patients
   * Beds
@@ -67,7 +67,7 @@ This system improves hospital workflow by:
 
 ---
 
-## 🧠 Problem Statement
+##  Problem Statement
 
 In many hospitals, patients are often handled using a **first-come, first-served** approach. This can delay treatment for **critical or emergency cases**. Bed allocation is also often manual, which may lead to inefficient resource usage.
 
@@ -81,7 +81,7 @@ In many hospitals, patients are often handled using a **first-come, first-served
 
 ---
 
-## 💡 Solution Flow
+##  Solution Flow
 
 ```text id="n9lvy4"
 Patient Registration
@@ -105,7 +105,7 @@ Bed Released + Record Added to History
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 * **Backend:** Python, Django
 * **Frontend:** HTML, CSS
@@ -115,7 +115,7 @@ Bed Released + Record Added to History
 
 ---
 
-## 📂 Project Structure
+##  Project Structure
 
 ```bash id="7i5k74"
 PBL-Project/
@@ -156,7 +156,7 @@ PBL-Project/
 
 ---
 
-## ⚙️ How It Works
+## How It Works
 
 ### 1) Patient Registration
 
@@ -216,7 +216,7 @@ When treatment is completed:
 
 ---
 
-## 🧪 Installation & Setup
+## Installation & Setup
 
 ### 1) Clone the repository
 
