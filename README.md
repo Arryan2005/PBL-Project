@@ -143,7 +143,7 @@ This project solves the problem by:
 
 ---
 
-# ⚙️ System Workflow
+# System Workflow
 
 ```text
 Patient Registration
@@ -312,7 +312,7 @@ and returns structured JSON containing:
 
 ---
 
-# 🎨 Frontend Features
+# Frontend Features
 
 The UI includes:
 
@@ -322,26 +322,6 @@ The UI includes:
 * Smart queue tables
 * Real-time bed status display
 * Glassmorphism-inspired styling
-
----
-
-# 📸 Main Pages
-
-## ➕ Add Patient
-
-Register and analyze patients.
-
-## 📋 Active Queue
-
-Monitor active patients and assign beds.
-
-## 🛏️ Bed Dashboard
-
-Track bed availability and occupancy.
-
-## 📜 Queue History
-
-View completed patient records.
 
 ---
 
