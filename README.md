@@ -1,98 +1,160 @@
 # Smart Hospital Queue & Emergency Bed Allocation System
 
-A **Django-based smart hospital mini project** that helps hospitals **prioritize patients intelligently**, **manage emergency queues**, and **allocate beds based on patient severity**.
-
-This project was built as a **PBL (Project-Based Learning) college project** to simulate a real-world hospital workflow where **critical patients are treated first** and **beds are allocated efficiently**.
-
----
-
-## Live Project Idea
-
-This system improves hospital workflow by:
-
-* Registering patients with symptoms and emergency status
-* Analyzing patient condition using **Google Gemini AI**
-* Falling back to **rule-based triage** if AI is unavailable
-* Generating a **priority score**, **severity level**, and **recommended department**
-* Automatically creating a **smart queue**
-* Assigning the **best available bed** based on severity
-* Tracking completed patients in **history**
+A modern **Django-based smart hospital management system** that helps hospitals intelligently prioritize patients, manage emergency queues, and allocate beds based on patient severity.
+This project was developed as a **Project-Based Learning (PBL)** mini project to simulate real-world hospital workflows where **critical patients are treated first** instead of using a traditional first-come, first-served system.
 
 ---
 
-## Features
+# Project Overview
 
-*  Patient registration with:
+The Smart Hospital Queue & Emergency Bed Allocation System improves hospital workflow by combining:
 
-  * Name
-  * Age
-  * Gender
-  * Multiple symptom selection
-  * Additional notes/problem
-  * Emergency case flag
+* AI-assisted patient triage
+* Smart priority-based queue management
+* Intelligent bed allocation
+* Emergency handling
+* Real-time hospital dashboards
 
-*  AI-assisted smart triage using:
+The system automatically analyzes patient conditions using AI and generates:
 
-  * **Google Gemini API**
-  * **Fallback rule-based logic** if AI fails
+* Priority Score
+* Severity Level
+* Recommended Department
 
-*  Automatic generation of:
-
-  * **Priority Score**
-  * **Severity Level** (`Critical`, `High`, `Medium`, `Low`)
-  * **Recommended Department**
-
-*  Smart queue management:
-
-  * Patients are sorted by **highest priority first**
-  * More critical patients are handled before low-risk patients
-
-*  Smart bed allocation:
-
-  * **Critical** → ICU preferred
-  * **High** → Emergency bed preferred
-  * **Medium / Low** → General bed preferred
-
-*  Dashboard pages for:
-
-  * Active patient queue
-  * Completed patient history
-  * Bed availability tracking
-
-*  Django Admin support for:
-
-  * Patients
-  * Beds
-  * Queue entries
+Patients are then placed into a dynamically sorted smart queue where critical patients receive faster attention.
 
 ---
 
-##  Problem Statement
+# Key Features
 
-In many hospitals, patients are often handled using a **first-come, first-served** approach. This can delay treatment for **critical or emergency cases**. Bed allocation is also often manual, which may lead to inefficient resource usage.
+## Smart Patient Registration
 
-### This project solves that by:
+Hospital staff can:
 
-* capturing symptoms during registration
+* Register patients
+* Enter symptoms/problems
+* Add additional medical notes
+* Mark emergency cases
+
+---
+
+## AI-Assisted Smart Triage
+
+The system uses:
+
+* **Groq API**
+* **Llama 3.3 70B Versatile Model**
+
+for intelligent patient analysis.
+
+The AI generates:
+
+* Priority score (0–100)
+* Severity level
+* Recommended department
+* Clinical reasoning
+
+### Severity Levels
+
+* Critical
+* High
+* Medium
+* Low
+
+---
+
+## Fallback Rule-Based System
+
+If the AI API becomes unavailable, the application automatically switches to a fallback rule-based logic system.
+
+This ensures the hospital workflow continues without interruption.
+
+---
+
+## Smart Queue Management
+
+Patients are automatically sorted using:
+
+1. Highest priority score first
+2. Token order second
+
+This ensures emergency and critical patients receive treatment before low-risk cases.
+
+---
+
+## Smart Bed Allocation
+
+Beds are assigned automatically according to patient severity.
+
+### Bed Allocation Logic
+
+| Severity | Preferred Bed Allocation  |
+| -------- | ------------------------- |
+| Critical | ICU → Emergency → General |
+| High     | Emergency → ICU → General |
+| Medium   | General → Emergency → ICU |
+| Low      | General → Emergency → ICU |
+
+---
+
+## Dashboard System
+The project includes multiple dashboards:
+
+* Patient Registration Dashboard
+* Active Queue Dashboard
+* Completed Patient History
+* Bed Management Dashboard
+
+---
+
+## Django Admin Support
+Admin panel support for:
+
+* Patients
+* Beds
+* Queue Entries
+
+---
+
+#  Problem Statement
+
+In many hospitals, patient treatment follows a **first-come, first-served** workflow.
+This may delay treatment for:
+
+* emergency patients
+* critical cases
+* elderly patients
+* accident victims
+
+Bed allocation is also often manual and inefficient.
+
+---
+
+# Proposed Solution
+
+This project solves the problem by:
+
+* analyzing symptoms intelligently
 * identifying emergency cases
-* calculating treatment priority automatically
-* sorting patients intelligently in the queue
-* allocating the most suitable available bed based on severity
+* generating automatic treatment priority
+* creating a smart hospital queue
+* allocating beds based on severity
+* improving resource utilization
 
 ---
 
-##  Solution Flow
+# ⚙️ System Workflow
 
-```text id="n9lvy4"
+```text
 Patient Registration
         ↓
 Symptoms + Emergency Input
         ↓
-AI / Fallback Triage Logic
+AI / Fallback Triage Analysis
         ↓
 Priority Score + Severity + Department
         ↓
-Queue Entry Created
+Queue Entry Creation
         ↓
 Smart Queue Sorting
         ↓
@@ -100,24 +162,26 @@ Severity-Based Bed Allocation
         ↓
 Treatment Completion
         ↓
-Bed Released + Record Added to History
+Bed Released + History Updated
 ```
 
 ---
 
-## Tech Stack
+# Tech Stack
 
-* **Backend:** Python, Django
-* **Frontend:** HTML, CSS
-* **Database:** SQLite (default Django database)
-* **AI Integration:** Google Gemini API
-* **Environment Variables:** python-dotenv
+| Category              | Technologies             |
+| --------------------- | ------------------------ |
+| Backend               | Python, Django           |
+| Frontend              | HTML, CSS                |
+| Database              | SQLite                   |
+| AI Integration        | Groq API + Llama 3.3 70B |
+| Environment Variables | python-dotenv            |
 
 ---
 
-##  Project Structure
+# Project Structure
 
-```bash id="7i5k74"
+```bash
 PBL-Project/
 │
 ├── manage.py
@@ -152,136 +216,215 @@ PBL-Project/
     └── asgi.py
 ```
 
-> **Note:** The exact folder layout may vary slightly depending on your local setup, but these are the main project components.
+---
+
+#  Database Models
+
+## Patient
+
+Stores:
+
+* Name
+* Age
+* Gender
+* Symptoms
+* Emergency status
+* Priority score
+* Severity
+* Recommended department
 
 ---
 
-## How It Works
+## Bed
 
-### 1) Patient Registration
+Stores:
 
-Hospital staff enters:
+* Bed number
+* Bed type
+* Availability status
 
-* patient name
-* age
-* gender
+Bed types:
+
+* ICU
+* Emergency
+* General
+
+---
+
+## QueueEntry
+
+Stores:
+
+* Queue token
+* Patient reference
+* Assigned bed
+* Queue status
+
+Statuses:
+
+* Waiting
+* Assigned
+* Completed
+
+---
+
+#  Smart Logic Used
+
+## Queue Prioritization
+
+Patients are sorted using:
+
+```python
+order_by('-patient__priority_score', 'token_number')
+```
+
+Higher priority patients are treated first.
+
+---
+
+## Severity-Based Bed Matching
+
+The system automatically selects the best available bed depending on severity.
+
+Example:
+
+* Critical patients get ICU preference
+* High-risk patients get emergency beds
+* Normal patients get general beds
+
+---
+
+## AI Prompt Engineering
+
+The AI model analyzes:
+
 * symptoms
-* additional notes
+* age
 * emergency status
+* additional notes
 
-### 2) Smart Triage (AI + Fallback)
+and returns structured JSON containing:
 
-The system analyzes the patient using:
-
-* **Google Gemini AI**, or
-* **fallback rule-based logic** if AI is unavailable
-
-It returns:
-
-* **priority score**
-* **severity**
-* **recommended department**
-
-### 3) Smart Queue Creation
-
-After analysis:
-
-* the patient is saved
-* a queue token is generated
-* the patient is added to the active queue
-
-### 4) Smart Queue Sorting
-
-Patients are automatically sorted by:
-
-* **higher priority score first**
-* then **token order**
-
-### 5) Smart Bed Allocation
-
-Beds are assigned based on severity:
-
-* **Critical** → ICU → Emergency → General
-* **High** → Emergency → ICU → General
-* **Medium** → General → Emergency → ICU
-* **Low** → General → Emergency → ICU
-
-### 6) Completion & History
-
-When treatment is completed:
-
-* assigned bed becomes available again
-* patient status becomes **Completed**
-* record appears in **Queue History**
+* priority score
+* severity
+* department recommendation
+* reasoning
 
 ---
 
-## Installation & Setup
+# 🎨 Frontend Features
 
-### 1) Clone the repository
+The UI includes:
 
-```bash id="fpc4n5"
+* Responsive dashboard design
+* Modern hospital-themed interface
+* Severity badges
+* Smart queue tables
+* Real-time bed status display
+* Glassmorphism-inspired styling
+
+---
+
+# 📸 Main Pages
+
+## ➕ Add Patient
+
+Register and analyze patients.
+
+## 📋 Active Queue
+
+Monitor active patients and assign beds.
+
+## 🛏️ Bed Dashboard
+
+Track bed availability and occupancy.
+
+## 📜 Queue History
+
+View completed patient records.
+
+---
+
+# 🛠️ Installation & Setup
+
+## 1) Clone Repository
+
+```bash
 git clone https://github.com/Arryan2005/PBL-Project.git
 cd PBL-Project
 ```
 
-### 2) Create a virtual environment (recommended)
+---
 
-```bash id="ggkk8x"
+## 2) Create Virtual Environment
+
+```bash
 python -m venv venv
 ```
 
-### 3) Activate the virtual environment
+---
 
-**Windows**
+## 3) Activate Virtual Environment
 
-```bash id="nng31j"
+### Windows
+
+```bash
 venv\Scripts\activate
 ```
 
-**Mac/Linux**
+### Mac/Linux
 
-```bash id="9b7d5c"
+```bash
 source venv/bin/activate
 ```
 
-### 4) Install dependencies
+---
 
-```bash id="njlwmn"
+## 4) Install Dependencies
+
+```bash
 pip install -r requirements.txt
 ```
 
-### 5) Create a `.env` file in the project root
+---
 
-```env id="mwvjlwm"
-GEMINI_API_KEY=your_api_key_here
+## 5) Create `.env` File
+
+Create a `.env` file in the project root.
+
+```env
+GROQ_API_KEY=your_api_key_here
 ```
 
-> If the Gemini API is unavailable, the system will still work using fallback logic.
+---
 
-### 6) Run migrations
+## 6) Run Migrations
 
-```bash id="v1djlwm"
+```bash
 python manage.py makemigrations
 python manage.py migrate
 ```
 
-### 7) Create superuser (optional, for admin access)
+---
 
-```bash id="3etjlwm"
+## 7) Create Superuser (Optional)
+
+```bash
 python manage.py createsuperuser
 ```
 
-### 8) Start the development server
+---
 
-```bash id="1kjjlwm"
+## 8) Run Development Server
+
+```bash
 python manage.py runserver
 ```
 
-### 9) Open in browser
+---
 
-```bash id="gmdjlwm"
+## 9) Open in Browser
+
+```text
 http://127.0.0.1:8000/
 ```
-
----

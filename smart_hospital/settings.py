@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-#gv2c%l$(5g9qi(a_d4z14nz7=e9b99dd@3hg0m%2g@1%opeo!
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-GEMINI_API_KEY = os.environ.get("GEMINI_API_KEY")  # ← ADD THIS LINE
+GROQ_API_KEY = os.environ.get("GROQ_API_KEY")  # ← ADD THIS LINE
 
 ALLOWED_HOSTS = []
 

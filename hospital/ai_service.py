@@ -1,54 +1,54 @@
-import google.generativeai as genai
 import json
+import re
+from groq import Groq
 from django.conf import settings
 
 
 def analyze_patient_with_ai(name, age, gender, problems, other_problem, is_emergency):
-    genai.configure(api_key=settings.GEMINI_API_KEY)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    client = Groq(api_key=settings.GROQ_API_KEY)
 
     prompt = f"""
-You are a medical triage AI assistant in a hospital emergency system.
-Analyze the following patient information and return a structured JSON response.
+You are a medical triage AI in a hospital emergency system.
+Analyze the patient below and return a JSON object. Nothing else. No markdown.
 
-Patient Details:
+Patient:
 - Name: {name}
 - Age: {age}
 - Gender: {gender}
-- Reported Symptoms/Problems: {', '.join(problems) if problems else 'None'}
-- Additional Notes: {other_problem if other_problem else 'None'}
-- Marked as Emergency by staff: {'Yes' if is_emergency else 'No'}
+- Symptoms: {', '.join(problems) if problems else 'None'}
+- Extra Notes: {other_problem or 'None'}
+- Staff-marked Emergency: {'Yes' if is_emergency else 'No'}
 
-Provide:
-1. priority_score: 0 to 100 (100 = most critical)
-2. severity: exactly one of → "Critical", "High", "Medium", "Low"
-3. recommended_department: e.g. Cardiology, Neurology, Emergency, General Medicine
-4. ai_reasoning: 1-2 sentence clinical explanation
+Scoring rules:
+- priority_score: integer 0–100. Higher = more urgent.
+  Weight heavily: chest pain, breathlessness, stroke signs, trauma, loss of consciousness.
+  Boost by 20 if staff-marked emergency. Boost by 10 if age < 5 or age > 70.
+- severity: "Critical" (80–100) | "High" (60–79) | "Medium" (40–59) | "Low" (0–39)
+- recommended_department: single department name e.g. Cardiology, Neurology, Emergency, Orthopedics
+- ai_reasoning: max 20 words. Clinical reason only.
 
-Respond ONLY with a valid JSON object. No markdown, no extra text.
-
-Example:
+Return exactly:
 {{
-  "priority_score": 85,
-  "severity": "Critical",
-  "recommended_department": "Cardiology",
-  "ai_reasoning": "Chest pain in elderly patient suggests possible cardiac emergency."
+  "priority_score": <int>,
+  "severity": "<Critical|High|Medium|Low>",
+  "recommended_department": "<string>",
+  "ai_reasoning": "<string>"
 }}
 """
 
-    response = model.generate_content(prompt)
+    response = client.chat.completions.create(
+        model="llama-3.3-70b-versatile",
+        max_tokens=500,
+        messages=[
+            {"role": "user", "content": prompt}
+        ]
+    )
 
-    # Strip markdown code fences if Gemini adds them
-    text = response.text.strip()
-    if text.startswith("```"):
-        text = text.split("```")[1]
-        if text.startswith("json"):
-            text = text[4:]
-    text = text.strip()
-
-    result = json.loads(text)
-
-    # Safety validation
+    text = response.choices[0].message.content.strip()
+    match = re.search(r'\{.*\}', text, re.DOTALL)
+    if not match:
+        raise ValueError("No JSON found in response")
+    result = json.loads(match.group())
     result['priority_score'] = max(0, min(100, int(result.get('priority_score', 50))))
     if result.get('severity') not in ['Critical', 'High', 'Medium', 'Low']:
         result['severity'] = 'Medium'
@@ -57,13 +57,12 @@ Example:
 
 
 def get_ai_analysis_safe(name, age, gender, problems, other_problem, is_emergency):
-    """Calls Gemini AI. Falls back to basic scoring if API fails."""
     try:
         return analyze_patient_with_ai(
             name, age, gender, problems, other_problem, is_emergency
         )
     except Exception as e:
-        print(f"[Gemini AI Error] {e}")
+        print(f"[Groq AI Error] {e}")
         score = 50
         if is_emergency:
             score += 30
